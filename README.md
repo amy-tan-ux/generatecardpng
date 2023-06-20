@@ -19,6 +19,8 @@ YOU CAN LEAVE FIELDS BLANK
 
 There is an instruction diagram on the website that shows the .CSV format that is accepted (corresponding to the location on the generated card). 
 
+DO NOT INCLUDE COMMAS IN YOUR ENTRIES
+
 There are 5 columns: 
 
         1- Location A Content: (Suggested) # of the Card
