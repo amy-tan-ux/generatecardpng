@@ -1,6 +1,14 @@
-var cardsGenerated = 0; // counts the number of cards being generated
+var cardsGenerated = 1; // counts the number of cards being generated
+var generatedCards = []; // stores the images generated [[name, png]]
+var zip;
 
 function GenerateCards(){
+    // Clear and Initialize
+    cardsGenerated = 1;
+    generatedCards = [];
+    document.getElementById("cardsShowcase").innerHTML ="";
+    document.getElementById("sideButtons").style.display = "block";
+    zip = new JSZip();
     // Generate all the Cards onto Webpage using HTML Canvas
     var inputFile = document.getElementById("fileInput");
     var processedInput = inputFile.files[0];
@@ -12,14 +20,9 @@ function GenerateCards(){
     reader.onload = function (e) {
         const text = e.target.result;
         inputValues = text.toString().split("\r\n");
-        console.log(text);
-        console.log(inputValues);
-        // Draw individual Cards using CreatePNG
-        let header = 1; // header == 1 means the first row is the header
         for (entry of inputValues){
             generateCards(entry);
         }
-        // Create download button to download all the images
      };
     reader.readAsText(processedInput);
                             // Default Values
@@ -32,7 +35,6 @@ function GenerateCards(){
 //Generate individual HTML Canvas
 function generateCards(cardDetails){
     // cardDetails is one row of entry where columns the individual details separated by commas
-
     /* Example cardDetails :
         1) Card Number
         2) Card Name
@@ -41,10 +43,7 @@ function generateCards(cardDetails){
         5) Text Blob 2
         6) Qnty (Maybe)
     */
-   var canvas = []; // array of all canvas
-   var cardCanvas = []; // array of all created canvas
-
-    function drawCard(cardNumber, cardName, cardColour, cardText1, cardText2){
+    function drawCard(cardNumber, cardName, cardColour, cardText1, cardText2, cardsGenerationCount){
 
         var canvas = document.getElementById("canvasID");
         var cardCanvas = canvas.getContext("2d");
@@ -56,7 +55,10 @@ function generateCards(cardDetails){
         cardCanvas.fillText(cardName, 45, 40);
         cardCanvas.fillText(cardText1, 25, 180);
         cardCanvas.fillText(cardText2, 25, 210);
-        // rows of 5 
+        // generate number visualization (rows of 5 )
+                            // TO-DO: Update UI
+                            // TO-DO: generate in recognizable formats (like dice)
+                            // TO-DO: limit value to under 10
         for (let i=0; i < cardNumber; i++){
             cardCanvas.beginPath();
             cardCanvas.arc(30 + (30 * (i%5)),
@@ -76,6 +78,9 @@ function generateCards(cardDetails){
         // generate png and add to html page
         var dataURL = canvas.toDataURL("image/png");
         document.getElementById("cardsShowcase").innerHTML += "<img src='" + dataURL + "'  width='216' height='336' alt='from canvas'/>";
+        canvas.toBlob(function (blob) {
+            zip.file(cardsGenerationCount.toString() + "_" + cardColour + "_" + cardName + ".png", blob);
+          });
         cardCanvas.reset();
 
     }
@@ -86,15 +91,21 @@ function generateCards(cardDetails){
 
     if (qnty){
         for (let i=0; i < qnty; i++){
-            drawCard(details[0], details[1], details[2], details[3], details[4]);               
+            drawCard(details[0], details[1], details[2], details[3], details[4], cardsGenerated);               
             cardsGenerated +=1;
-    
         }
     }
     else{
-        drawCard(details[0], details[1], details[2], details[3], details[4]);               
+        drawCard(details[0], details[1], details[2], details[3], details[4], cardsGenerated);               
         cardsGenerated +=1;
-
     }}
 
-// Save all canvas
+function DownloadGeneratedCards(){
+    // Download Zip File of Cards
+    zip.generateAsync({type:"blob"})
+    .then(function(zip) {
+    saveAs(zip, "CreatedCardsDownload.zip");
+  });
+    
+
+}

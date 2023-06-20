@@ -17,9 +17,16 @@
 </br>
     <button type="button" onclick="GenerateCards()">Generate Cards [PNG]</button>
     <script src="..\scripts\generateCardPNG.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+    <script data-main="..\node_modules\jszip\dist\jszip.js" src="..\node_modules\jszip\dist\jszip.js"></script>
 </body>
 </br>
 <cardsDisplay id="cardsShowcase">
 </cardsDisplay>
 <canvas id= "canvasID" width='216' height='336'> </canvas>
+<buttonChoices id = "sideButtons">
+    <button type="button" onclick="GenerateCards()">Regenerate Cards [PNG]</button>
+    <button type="button" onclick="DownloadGeneratedCards()">DownloadAll Cards [PNG]</button>    
+</buttonChoices>
 </html>
+

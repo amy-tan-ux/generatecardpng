@@ -24,3 +24,15 @@ canvas{
     display: none;
     position: relative;
 }
+
+#sideButtons{
+    display: none;
+    margin: 5%;
+    width: max(300px, 5vw);
+    height: auto;
+    padding: max(2vw, 10px);
+    position: fixed;
+    right: 10px;
+    top: 10px;
+    background-color: rgba(165, 238, 158, 0.363);
+}
